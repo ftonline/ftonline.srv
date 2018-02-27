@@ -20,10 +20,10 @@ public class DemoApplication {
   	}
   
 	@GetMapping("/")
-  	public Synagogue hello() throws Exception {
+  	public String hello() throws Exception {
 		Synagogue s = new Synagogue();
 		s.setAddress("sdfdfgdfg");
-		return s;
+		return httpService.sendGet();
 	}
   
   
