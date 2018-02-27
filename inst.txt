@@ -1,0 +1,5 @@
+to test on local:
+	./mvnw -DskipTests appengine:devserver
+
+to deploy:
+	mvn appengine:update
