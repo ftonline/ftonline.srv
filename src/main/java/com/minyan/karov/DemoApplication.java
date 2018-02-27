@@ -20,10 +20,23 @@ public class DemoApplication {
   	}
   
 	@GetMapping("/")
-  	public String hello() throws Exception {
-		Synagogue s = new Synagogue();
-		s.setAddress("sdfdfgdfg");
-		return httpService.sendGet();
+  	public String hello()
+	{
+		try 
+		{
+			Synagogue s = new Synagogue();
+			s.setAddress("sdfdfgdfg");
+			return httpService.sendGet();
+		} 
+		catch (Exception e) 
+		{
+			String s = e.toString() + "\n";
+			for (StackTraceElement stackTraceElement : e.getStackTrace())
+			{
+				s = s + stackTraceElement.toString() + "\n";
+			}
+			return s;
+		}
 	}
   
   
