@@ -13,11 +13,11 @@ public class DatastoreDaoTest {
 
 	@Test
 	public void contextLoads() {
-		Synagogue s = new Synagogue();
+		/*Synagogue s = new Synagogue();
 		s.setSynagogueId("111");
 		s.setSynagogueName("222222222");
 		DatastoreDao dd = new DatastoreDao();
-		dd.create(s);
+		dd.create(s);*/
 	}
 
 }

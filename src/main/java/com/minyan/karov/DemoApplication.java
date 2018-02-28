@@ -5,10 +5,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.*;
 
-import com.google.cloud.datastore.Datastore;
-import com.google.cloud.datastore.DatastoreOptions;
-import com.google.cloud.datastore.Entity;
-import com.google.cloud.datastore.Key;
 import com.minyan.karov.dao.DatastoreDao;
 import com.minyan.karov.entities.Synagogue;
 
@@ -34,7 +30,7 @@ public class DemoApplication {
 		try 
 		{
 			Synagogue s = new Synagogue();
-			s.setSynagogueId("tttttt");
+			s.setSynagogueId("yyyyyyyyyy");
 			s.setSynagogueName("אוהל בלהה");
 			datastoreDao.create(s);
 		}
