@@ -25,6 +25,7 @@ public class DemoApplication {
 	@GetMapping("/")
   	public String hello()
 	{
+		try {
 		// Instantiates a client
 	    Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
 
@@ -49,7 +50,10 @@ public class DemoApplication {
 	    Entity retrieved = datastore.get(taskKey);
 
 	    System.out.printf("Retrieved %s: %s%n", taskKey.getName(), retrieved.getString("description"));
-		
+		}
+		catch (Exception e) {
+			return e.toString();
+		}
 		
 		
 		

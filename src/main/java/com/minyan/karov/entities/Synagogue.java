@@ -1,14 +1,22 @@
 package com.minyan.karov.entities;
 
 import java.util.ArrayList;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 import java.util.List;
 
+@Entity(name = "Synagogue")
 public class Synagogue 
 {
+	@Id
+	@Column
 	private String synagogueId;
 	
 	
-	private String senagogName;
+	private String synagogueName;
 	
 	
 	private String address;
@@ -35,15 +43,15 @@ public class Synagogue
 	}
 	
 	
-	public String getSenagogName() 
+	public String getSynagogueName() 
 	{
-		return senagogName;
+		return synagogueName;
 	}
 	
 	
-	public void setSenagogName(String senagogName) 
+	public void setSynagogueName(String senagogName) 
 	{
-		this.senagogName = senagogName;
+		this.synagogueName = senagogName;
 	}
 	
 	
