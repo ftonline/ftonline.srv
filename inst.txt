@@ -3,3 +3,8 @@ to test on local:
 
 to deploy:
 	mvn appengine:update
+	
+	
+	
+to remove directory	
+	rm -r mydir
