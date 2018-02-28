@@ -9,6 +9,7 @@ import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.DatastoreOptions;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.Key;
+import com.minyan.karov.dao.DatastoreDao;
 import com.minyan.karov.entities.Synagogue;
 
 @SpringBootApplication
@@ -18,6 +19,11 @@ public class DemoApplication {
 	@Autowired
 	HttpService httpService;
 	
+	
+	@Autowired
+	DatastoreDao datastoreDao;
+	
+	
 	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
   	}
@@ -25,31 +31,12 @@ public class DemoApplication {
 	@GetMapping("/")
   	public String hello()
 	{
-		try {
-		// Instantiates a client
-	    Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
-
-	    // The kind for the new entity
-	    String kind = "Task";
-	    // The name/ID for the new entity
-	    String name = "sampletask1";
-	    // The Cloud Datastore key for the new entity
-	    Key taskKey = datastore.newKeyFactory().setKind(kind).newKey(name);
-
-	    // Prepares the new entity
-	    Entity task = Entity.newBuilder(taskKey)
-	        .set("description", "Buy milk")
-	        .build();
-
-	    // Saves the entity
-	    datastore.put(task);
-
-	    System.out.printf("Saved %s: %s%n", task.getKey().getName(), task.getString("description"));
-
-	    //Retrieve entity
-	    Entity retrieved = datastore.get(taskKey);
-
-	    System.out.printf("Retrieved %s: %s%n", taskKey.getName(), retrieved.getString("description"));
+		try 
+		{
+			Synagogue s = new Synagogue();
+			s.setSynagogueId("tttttt");
+			s.setSynagogueName("אוהל בלהה");
+			datastoreDao.create(s);
 		}
 		catch (Exception e) {
 			return e.toString();

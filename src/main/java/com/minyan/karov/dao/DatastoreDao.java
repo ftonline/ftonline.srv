@@ -6,11 +6,15 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+import org.springframework.stereotype.Repository;
+
 import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.DatastoreOptions;
 import com.google.cloud.datastore.Key;
 import com.google.cloud.datastore.Entity.Builder;
 
+
+@Repository
 public class DatastoreDao 
 {
 	private Datastore datastore;
@@ -65,7 +69,10 @@ public class DatastoreDao
 					String columnName = column.name() != null && !column.name().trim().isEmpty() ? column.name() : f.getName();
 					f.setAccessible(true);
 					String value = (String) f.get(obj);
-					builder.set(columnName, value);
+					if (value != null)
+					{
+						builder.set(columnName, value);
+					}
 				}
 			}
 		}

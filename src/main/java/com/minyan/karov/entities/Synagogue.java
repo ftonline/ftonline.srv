@@ -15,16 +15,16 @@ public class Synagogue
 	@Column
 	private String synagogueId;
 	
-	
+	@Column
 	private String synagogueName;
 	
-	
+	@Column
 	private String address;
 	
-	
+	@Column
 	private String coordinate;
 	
-	
+	@Column
 	private String nosach;
 	
 	
