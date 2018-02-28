@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Synagogue 
 {
-	private String senagogId;
+	private String synagogueId;
 	
 	
 	private String senagogName;
@@ -23,15 +23,15 @@ public class Synagogue
 	private List<Minyan> minyans = new ArrayList<Minyan>();
 	
 	
-	public String getSenagogId() 
+	public String getSynagogueId() 
 	{
-		return senagogId;
+		return synagogueId;
 	}
 	
 	
-	public void setSenagogId(String senagogId) 
+	public void setSynagogueId(String senagogId) 
 	{
-		this.senagogId = senagogId;
+		this.synagogueId = senagogId;
 	}
 	
 	
