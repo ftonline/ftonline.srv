@@ -26,59 +26,45 @@ public class DatastoreDao
 	}
 	
 	
-	public void create(Object obj)
+	public void create(Object obj) throws IllegalArgumentException, IllegalAccessException
 	{
-		try
+		Entity entity = obj.getClass().getAnnotation(Entity.class);
+		if (entity == null)
 		{
-			Entity entity = obj.getClass().getAnnotation(Entity.class);
-			if (entity == null)
-			{
-				return;
-			}
-			String entityName = entity.name();
-			
-			Field fieldId = getFieldId(obj);
-			fieldId.setAccessible(true);
-			String id = (String) fieldId.get(obj);
-			
-			Key taskKey = datastore.newKeyFactory().setKind(entityName).newKey(id);
-			
-			Builder builder = com.google.cloud.datastore.Entity.newBuilder(taskKey);
-			
-			populateFields(obj, builder);
-			
-			com.google.cloud.datastore.Entity task = builder.build();
-			datastore.put(task);			        
+			return;
 		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
+		String entityName = entity.name();
+		
+		Field fieldId = getFieldId(obj);
+		fieldId.setAccessible(true);
+		String id = (String) fieldId.get(obj);
+		
+		Key taskKey = datastore.newKeyFactory().setKind(entityName).newKey(id);
+		
+		Builder builder = com.google.cloud.datastore.Entity.newBuilder(taskKey);
+		
+		populateFields(obj, builder);
+		
+		com.google.cloud.datastore.Entity task = builder.build();
+		datastore.put(task);			        
 	}
 	
 	
-	private void populateFields(Object obj, Builder builder)
+	private void populateFields(Object obj, Builder builder) throws IllegalArgumentException, IllegalAccessException
 	{
-		try
+		for (Field f : obj.getClass().getDeclaredFields())
 		{
-			for (Field f : obj.getClass().getDeclaredFields())
+			Column column = f.getAnnotation(Column.class);
+			if (column != null)
 			{
-				Column column = f.getAnnotation(Column.class);
-				if (column != null)
+				String columnName = column.name() != null && !column.name().trim().isEmpty() ? column.name() : f.getName();
+				f.setAccessible(true);
+				String value = (String) f.get(obj);
+				if (value != null)
 				{
-					String columnName = column.name() != null && !column.name().trim().isEmpty() ? column.name() : f.getName();
-					f.setAccessible(true);
-					String value = (String) f.get(obj);
-					if (value != null)
-					{
-						builder.set(columnName, value);
-					}
+					builder.set(columnName, value);
 				}
 			}
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
 		}
 	}
 	

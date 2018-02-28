@@ -38,7 +38,8 @@ public class DemoApplication {
 			s.setSynagogueName("אוהל בלהה");
 			datastoreDao.create(s);
 		}
-		catch (Exception e) {
+		catch (Exception e) 
+		{
 			String str = e.toString() + "<br/>";
 			for (StackTraceElement stackTraceElement : e.getStackTrace())
 			{
