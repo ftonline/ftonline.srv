@@ -39,7 +39,12 @@ public class DemoApplication {
 			datastoreDao.create(s);
 		}
 		catch (Exception e) {
-			return e.toString();
+			String str = e.toString() + "<br/>";
+			for (StackTraceElement stackTraceElement : e.getStackTrace())
+			{
+				str = str + stackTraceElement.toString() + "<br/>";
+			}
+			return str;
 		}
 		
 		
