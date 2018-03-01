@@ -103,20 +103,20 @@
 		        </webResources>
 		      </configuration>
 		    </plugin>
-			<plugin>
+			<!-- plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
+			</plugin-->
 			<!--  plugin>
 		        <groupId>com.google.appengine</groupId>
 		        <artifactId>appengine-maven-plugin</artifactId>
-		        <version>1.9.60</version>
-		      </plugin-->
-		      <plugin>
+				<version>1.9.60</version>
+		  	</plugin-->
+		    <plugin>
 		        <groupId>com.google.cloud.tools</groupId>
 		        <artifactId>appengine-maven-plugin</artifactId>
-		      	<version>${appengine-maven-plugin-version}</version>
-		      </plugin>
+		    	<version>${appengine-maven-plugin-version}</version>
+			</plugin>
 		</plugins>
 	</build>
 

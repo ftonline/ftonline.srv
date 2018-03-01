@@ -14,3 +14,11 @@ to test:
 	
 to remove directory	
 	rm -r mydir
+	
+	
+	
+	
+	
+
+mvn appengine:run
+mvn appengine:deploy
