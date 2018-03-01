@@ -5,32 +5,10 @@ import java.lang.reflect.Field;
 import javax.persistence.Column;
 import javax.persistence.Id;
 
-import org.springframework.stereotype.Repository;
-
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.DatastoreFailureException;
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.KeyFactory;
-import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.FetchOptions;
-import com.google.appengine.api.datastore.PreparedQuery;
-import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.datastore.Query.FilterOperator;
-import com.google.appengine.api.datastore.Query.FilterPredicate;
 
 
-@Repository
-public class DatastoreDao 
-{
-	private DatastoreService datastore;
-	
-	
-	public DatastoreDao() 
-	{
-		datastore = DatastoreServiceFactory.getDatastoreService();
-	}
-	
-	
+public abstract class DatastoreDao 
+{	
 	public void create(Object obj) throws IllegalArgumentException, IllegalAccessException
 	{
 		javax.persistence.Entity entity = obj.getClass().getAnnotation(javax.persistence.Entity.class);
@@ -38,20 +16,26 @@ public class DatastoreDao
 		{
 			return;
 		}
-		String entityName = entity.name();
+		
+		String entityName = entity.name();		
 		
 		Field fieldId = getFieldId(obj);
 		fieldId.setAccessible(true);		
+		String id = (String) fieldId.get(obj);
 		
-		Entity post = new Entity(entityName);
+		EntityObject entityObject = new EntityObject();
+		entityObject.setEntityName(entityName);
+		entityObject.setId(id);
 		
-		populateFields(obj, post);
-		
-		datastore.put(post);			        
+		populateFields(obj, entityObject);
+		put(entityObject);     
 	}
 	
 	
-	private void populateFields(Object obj, Entity entity) throws IllegalArgumentException, IllegalAccessException
+	protected abstract void put(EntityObject entityObject);
+	
+	
+	private void populateFields(Object obj, EntityObject entityObject) throws IllegalArgumentException, IllegalAccessException
 	{
 		for (Field f : obj.getClass().getDeclaredFields())
 		{
@@ -63,7 +47,7 @@ public class DatastoreDao
 				String value = (String) f.get(obj);
 				if (value != null)
 				{
-					entity.setProperty(columnName, value);
+					entityObject.setProperty(columnName, value);
 				}
 			}
 		}
