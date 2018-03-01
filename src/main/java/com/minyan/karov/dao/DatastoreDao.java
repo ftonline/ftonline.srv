@@ -3,33 +3,37 @@ package com.minyan.karov.dao;
 import java.lang.reflect.Field;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.Id;
 
 import org.springframework.stereotype.Repository;
 
-import com.google.cloud.datastore.Datastore;
-import com.google.cloud.datastore.DatastoreOptions;
-
-import com.google.cloud.datastore.Key;
-import com.google.cloud.datastore.Entity.Builder;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.DatastoreFailureException;
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.FetchOptions;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.FilterOperator;
+import com.google.appengine.api.datastore.Query.FilterPredicate;
 
 
 @Repository
 public class DatastoreDao 
 {
-	private Datastore datastore;
+	private DatastoreService datastore;
 	
 	
 	public DatastoreDao() 
 	{
-		datastore = DatastoreOptions.getDefaultInstance().getService();
+		datastore = DatastoreServiceFactory.getDatastoreService();
 	}
 	
 	
 	public void create(Object obj) throws IllegalArgumentException, IllegalAccessException
 	{
-		Entity entity = obj.getClass().getAnnotation(Entity.class);
+		javax.persistence.Entity entity = obj.getClass().getAnnotation(javax.persistence.Entity.class);
 		if (entity == null)
 		{
 			return;
@@ -37,21 +41,17 @@ public class DatastoreDao
 		String entityName = entity.name();
 		
 		Field fieldId = getFieldId(obj);
-		fieldId.setAccessible(true);
-		String id = (String) fieldId.get(obj);
+		fieldId.setAccessible(true);		
 		
-		Key taskKey = datastore.newKeyFactory().setKind(entityName).newKey(id);
+		Entity post = new Entity(entityName);
 		
-		Builder builder = com.google.cloud.datastore.Entity.newBuilder(taskKey);
+		populateFields(obj, post);
 		
-		populateFields(obj, builder);
-		
-		com.google.cloud.datastore.Entity task = builder.build();
-		datastore.put(task);			        
+		datastore.put(post);			        
 	}
 	
 	
-	private void populateFields(Object obj, Builder builder) throws IllegalArgumentException, IllegalAccessException
+	private void populateFields(Object obj, Entity entity) throws IllegalArgumentException, IllegalAccessException
 	{
 		for (Field f : obj.getClass().getDeclaredFields())
 		{
@@ -63,7 +63,7 @@ public class DatastoreDao
 				String value = (String) f.get(obj);
 				if (value != null)
 				{
-					builder.set(columnName, value);
+					entity.setProperty(columnName, value);
 				}
 			}
 		}

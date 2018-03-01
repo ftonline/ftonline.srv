@@ -21,4 +21,5 @@ to remove directory
 	
 
 mvn appengine:run
+gcloud config set project minyan-karov-196709
 mvn appengine:deploy
