@@ -23,8 +23,7 @@ public class DatastoreDao
 	
 	public DatastoreDao() 
 	{
-		DatastoreOptions options = DatastoreOptions.newBuilder().setProjectId("tamiradler").build();
-		datastore = options.getService(); //DatastoreOptions.getDefaultInstance().getService();
+		datastore = DatastoreOptions.getDefaultInstance().getService();
 	}
 	
 	
