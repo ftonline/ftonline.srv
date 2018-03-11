@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 import java.util.List;
 
@@ -27,7 +28,7 @@ public class Synagogue
 	@Column
 	private String nosach;
 	
-	
+	@OneToMany
 	private List<Minyan> minyans = new ArrayList<Minyan>();
 	
 	
@@ -100,5 +101,11 @@ public class Synagogue
 	public void setMinyans(List<Minyan> minyans) 
 	{
 		this.minyans = minyans;
+	}
+	
+	
+	public void addMinyan(Minyan minyan) 
+	{
+		this.minyans.add(minyan);
 	}
 }

@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.*;
 
 import com.minyan.karov.dao.DatastoreDao;
+import com.minyan.karov.entities.Minyan;
 import com.minyan.karov.entities.Synagogue;
 
 @SpringBootApplication
@@ -34,6 +35,10 @@ public class DemoApplication {
 			Synagogue s = new Synagogue();
 			s.setSynagogueId("yyyyyyyyyy");
 			s.setSynagogueName("אוהל בלהה");
+			
+			Minyan m = new Minyan();
+			s.addMinyan(m);
+			m.setMinyanId("sdfsdf");
 			datastoreDao.create(s);
 		}
 		catch (Exception e) 

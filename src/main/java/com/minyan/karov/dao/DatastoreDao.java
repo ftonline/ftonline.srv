@@ -1,42 +1,48 @@
 package com.minyan.karov.dao;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.Column;
-import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 
 public abstract class DatastoreDao 
-{	
+{
+	@Autowired
+	IdGenerator idGenerator;
+	
 	public void create(Object obj) throws IllegalArgumentException, IllegalAccessException
 	{
-		javax.persistence.Entity entity = obj.getClass().getAnnotation(javax.persistence.Entity.class);
-		if (entity == null)
-		{
-			return;
-		}
-		
-		String entityName = entity.name();		
-		
-		Field fieldId = getFieldId(obj);
-		fieldId.setAccessible(true);		
-		String id = (String) fieldId.get(obj);
-		
-		EntityObject entityObject = new EntityObject();
-		entityObject.setEntityName(entityName);
-		entityObject.setId(id);
-		
-		populateFields(obj, entityObject);
-		put(entityObject);     
+		List<EntityObject> entityObjects = populateFields(obj);
+		put(entityObjects);     
 	}
 	
 	
-	protected abstract void put(EntityObject entityObject);
+	protected abstract void put(List<EntityObject> entityObject);
 	
 	
-	private void populateFields(Object obj, EntityObject entityObject) throws IllegalArgumentException, IllegalAccessException
+	private List<EntityObject> populateFields(Object obj) throws IllegalArgumentException, IllegalAccessException
 	{
+		List<EntityObject> entityObjects = new ArrayList<EntityObject>();
+		javax.persistence.Entity entity = obj.getClass().getAnnotation(javax.persistence.Entity.class);
+		if (entity == null)
+		{
+			return entityObjects;
+		}
+		
+		String entityName = entity.name();				
+		
+		EntityObject entityObject = new EntityObject();
+		entityObjects.add(entityObject);
+		entityObject.setEntityName(entityName);
+		entityObject.setId(idGenerator.getUniqueId());
+		
 		for (Field f : obj.getClass().getDeclaredFields())
 		{
 			Column column = f.getAnnotation(Column.class);
@@ -50,20 +56,19 @@ public abstract class DatastoreDao
 					entityObject.setProperty(columnName, value);
 				}
 			}
-		}
-	}
-	
-	
-	private Field getFieldId(Object obj)
-	{
-		for (Field f : obj.getClass().getDeclaredFields()) 
-		{
-			Id id = f.getAnnotation(Id.class);
-			if (id != null)
+			
+			OneToMany oneToMany = f.getAnnotation(OneToMany.class);
+			if (oneToMany != null)
 			{
-				return f;
+				f.setAccessible(true);
+				Collection <?> collection = (Collection<?>) f.get(obj);
+				for (Object collObj : collection)
+				{
+					entityObjects.addAll(populateFields(collObj));
+				}
 			}
 		}
-		return null;
-	}	
+		
+		return entityObjects;
+	}
 }

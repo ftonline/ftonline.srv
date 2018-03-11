@@ -1,5 +1,7 @@
 package com.minyan.karov.dao;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map.Entry;
 
 import org.springframework.stereotype.Repository;
@@ -21,21 +23,27 @@ public class DatastoreApi extends DatastoreDao
 	
 	
 	@Override
-	protected void put(EntityObject entityObject)
+	protected void put(List<EntityObject> entityObjects)
 	{
-		Entity post = populateFields(entityObject);
-		datastore.put(post);	
+		List<Entity> posts = populateFields(entityObjects);
+		datastore.put(posts);
 	}
 	
 	
-	private Entity populateFields(EntityObject entityObject)
+	private List<Entity> populateFields(List<EntityObject> entityObjects)
 	{
-		Entity entity = new Entity(entityObject.getEntityName());
+		List<Entity> entities = new ArrayList<Entity>();
 		
-		for (Entry<String, Object> entry : entityObject.getProperties().entrySet())
+		for (EntityObject entityObject : entityObjects)
 		{
-			entity.setProperty(entry.getKey(), entry.getValue());
+			Entity entity = new Entity(entityObject.getEntityName());
+			entities.add(entity);
+			for (Entry<String, Object> entry : entityObject.getProperties().entrySet())
+			{
+				entity.setProperty(entry.getKey(), entry.getValue());
+			}
 		}
-		return entity;
+		
+		return entities;
 	}
 }
