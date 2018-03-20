@@ -28,7 +28,7 @@ public abstract class DatastoreDao
 	protected abstract List<EntityObject> getEntityObject(String entityName, Entry<String,String> ... pair);
 	
 	
-	public <T>List<T> getEntity(Class <T> entityClass, Entry<String,String> ... pair)
+	public <T>List<T> getEntity(Class <T> entityClass, Entry<String,String> ... pair) throws Exception
 	{
 		List<T> objs = new ArrayList<>();
 		try 
@@ -54,6 +54,7 @@ public abstract class DatastoreDao
 		catch (Exception e) 
 		{
 			e.printStackTrace();
+			throw e;
 		}
 		return objs;
 	}

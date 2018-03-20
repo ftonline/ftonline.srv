@@ -42,12 +42,25 @@ public class UserService
 	public User getUser(@PathVariable("userId") String userId)
 	{
 		Entry<String, String> pair = new AbstractMap.SimpleEntry<String, String>("userId", userId);
-		List <User> users = datastoreDao.getEntity(User.class, pair);
-		if (users.size() > 0)
-		{
-			return users.get(0);
+		List<User> users;
+		try {
+			users = datastoreDao.getEntity(User.class, pair);
+		
+			if (users.size() > 0)
+			{
+				return users.get(0);
+			}
+			return null;
+		} catch (Exception e) {
+			String str = e.toString() + "<br/>";
+			for (StackTraceElement stackTraceElement : e.getStackTrace())
+			{
+				str = str + stackTraceElement.toString() + "<br/>";
+			}
+			User u = new User();
+			u.setFirstName(str);
+			return u;
 		}
-		return null;
 	}
 	
 	
