@@ -57,7 +57,7 @@ public class DatastoreApi extends DatastoreDao
 	protected List<EntityObject> getEntityObject(String entityName, Entry<String,String> ... pair)
 	{
 		List<EntityObject> entityObjects = new ArrayList<>();
-		Query query = new Query();
+		Query query = new Query(entityName);
 		
 		for (Entry<String,String> p : pair)
 		{
