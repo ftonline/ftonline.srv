@@ -2,13 +2,10 @@ package com.ftonline.dao;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 
-import org.quartz.utils.Pair;
 import org.springframework.stereotype.Repository;
 
-import com.ftonline.entities.User;
 import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.DatastoreOptions;
 import com.google.cloud.datastore.Entity;

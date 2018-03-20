@@ -5,8 +5,6 @@ import java.util.AbstractMap;
 import java.util.List;
 import java.util.Map.Entry;
 
-import javax.websocket.server.PathParam;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +25,7 @@ public class UserService
 	
 	
 	@Autowired
-	@Qualifier("datastoreCloud")
+	@Qualifier("datastoreApi")
 	DatastoreDao datastoreDao;
 	
 	
