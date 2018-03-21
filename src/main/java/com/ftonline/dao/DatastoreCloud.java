@@ -31,6 +31,13 @@ public class DatastoreCloud extends DatastoreDao
 	@Override
 	protected void put(List<EntityObject> entityObjects)
 	{
+		List <FullEntity<?>> tasks = getTasksFromEntityObjects(entityObjects);
+		datastore.put(tasks.toArray(new FullEntity[tasks.size()]));	
+	}
+	
+	
+	List <FullEntity<?>> getTasksFromEntityObjects(List<EntityObject> entityObjects)
+	{
 		List <FullEntity<?>> tasks = new ArrayList<FullEntity<?>>();
 		for (EntityObject entityObject : entityObjects)
 		{
@@ -40,7 +47,7 @@ public class DatastoreCloud extends DatastoreDao
 			Entity task = populateFields(entityObject, builder);
 			tasks.add(task);
 		}
-		datastore.put(tasks.toArray(new FullEntity[tasks.size()]));	
+		return tasks;
 	}
 	
 	
@@ -55,7 +62,6 @@ public class DatastoreCloud extends DatastoreDao
 	
 	
 	@Override
-	//Entry<String,Integer> pair1=new SimpleEntry<>("Not Unique key1",1);
 	protected List<EntityObject> getEntityObject(String entityName, Entry<String,String> ... pair)
 	{
 		List<EntityObject> entityObjects = new ArrayList<>();
@@ -106,5 +112,19 @@ public class DatastoreCloud extends DatastoreDao
 		}
 		
 		return entityObjects;
+	}
+	
+	public void update(List<EntityObject> entityObjects)
+	{
+		List <FullEntity<?>> tasks = getTasksFromEntityObjects(entityObjects);
+		
+		List<Entity> entities = new ArrayList<>();
+		
+		for (FullEntity<?> fullEntity : tasks) 
+		{
+			entities.add((Entity) fullEntity);
+		}
+		
+		datastore.update(entities.toArray(new Entity[entities.size()]));
 	}
 }

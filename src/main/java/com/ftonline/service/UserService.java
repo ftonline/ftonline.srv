@@ -25,16 +25,46 @@ public class UserService
 	
 	
 	@Autowired
-	@Qualifier("datastoreApi")
+	@Qualifier("datastoreCloud")
 	DatastoreDao datastoreDao;
 	
 	
 	@PostMapping(value="/user/retrieveUser", consumes="application/json")
-  	public User psotUser(@RequestBody UserServiceInput userServiceInput)
+  	public PsotUserOutput psotUser(@RequestBody PsotUserInput psotUserInput)
 	{
-		String googleTokenId = userServiceInput.getTokenId();
-		User user = retrieveUser(googleTokenId);
-		return user;
+		PsotUserOutput psotUserOutput = new PsotUserOutput();
+		try 
+		{
+			String googleTokenId = psotUserInput.getTokenId();
+			User user = retrieveUser(googleTokenId);
+			psotUserOutput.setUser(user);
+			return psotUserOutput;
+		} 
+		catch (Exception e) 
+		{
+			psotUserOutput.addThrowable(e);
+			return psotUserOutput;
+		}
+	}
+	
+	
+	public UpdateUserOutput updateUser(UpdateUserInput updateUserInput)
+	{
+		UpdateUserOutput updateUserOutput = new UpdateUserOutput();
+		try
+		{
+			User user = updateUserInput.getUser();
+			User userToUpdate = retrieveUser(updateUserInput.getTokenId());
+			userToUpdate.setFifaUser(user.getFifaUser());
+			userToUpdate.setFirstName(user.getFirstName());
+			userToUpdate.setLastName(user.getLastName());
+			userToUpdate.setPhone(user.getPhone());
+		}
+		catch (Exception e) 
+		{
+			updateUserOutput.addThrowable(e);
+		}
+		return updateUserOutput;
 	}
 	
 	
@@ -43,50 +73,103 @@ public class UserService
 	{
 		Entry<String, String> pair = new AbstractMap.SimpleEntry<String, String>("userId", userId);
 		List<User> users;
-		try {
-			users = datastoreDao.getEntity(User.class, pair);
 		
-			if (users.size() > 0)
-			{
-				return users.get(0);
-			}
-			return null;
-		} catch (Exception e) {
-			String str = e.toString() + "<br/>";
-			for (StackTraceElement stackTraceElement : e.getStackTrace())
-			{
-				str = str + stackTraceElement.toString() + "<br/>";
-			}
-			User u = new User();
-			u.setFirstName(str);
-			return u;
+		users = datastoreDao.getEntity(User.class, pair);
+	
+		if (users.size() > 0)
+		{
+			return users.get(0);
+		}
+		return null;
+	}
+	
+	
+	private User retrieveUser(String googleTokenId) throws Exception
+	{
+		GoogleTokenClaims googleTokenClaims = googleSignInService.retriveGoogleTokenClaims(googleTokenId);
+		if(!googleTokenClaims.getAud().equals("566387118967-mj1o2jd61ra475g3ql29qkvrv6htrh7m.apps.googleusercontent.com"))
+		{
+			throw new Exception("the client id is wrong");
+		}
+		
+		User user = getUser(googleTokenClaims.getSub());
+		
+		if (user != null)
+		{
+			return user;
+		}
+		
+		user = new User();
+		user.setUserId(googleTokenClaims.getSub());
+		user.setFirstName(googleTokenClaims.getGiven_name());
+		user.setLastName(googleTokenClaims.getFamily_name());
+		user.setMail(googleTokenClaims.getEmail());
+		
+		datastoreDao.create(user);
+		return user;
+	}
+	
+	class  PsotUserInput
+	{
+		private String tokenId;
+
+		public String getTokenId()
+		{
+			return tokenId;
+		}
+
+		public void setTokenId(String tokenId) 
+		{
+			this.tokenId = tokenId;
+		}
+	}
+	
+	class  PsotUserOutput extends ServiceOutput
+	{
+		private User user;
+		
+		public void setUser(User user)
+		{
+			this.user = user;
+		}
+		
+		public User getUser()
+		{
+			return this.user;
 		}
 	}
 	
 	
-	private User retrieveUser(String googleTokenId)
+	class UpdateUserInput
 	{
-		try 
+		private String tokenId;
+		
+		private User user;
+
+		public String getTokenId() 
 		{
-			GoogleTokenClaims googleTokenClaims = googleSignInService.retriveGoogleTokenClaims(googleTokenId);
-			if(!googleTokenClaims.getAud().equals("566387118967-mj1o2jd61ra475g3ql29qkvrv6htrh7m.apps.googleusercontent.com"))
-			{
-				throw new Exception("the client id is wrong");
-			}
-			User user = new User();
-			user.setUserId(googleTokenClaims.getSub());
-			user.setFirstName(googleTokenClaims.getGiven_name());
-			user.setLastName(googleTokenClaims.getFamily_name());
-			user.setMail(googleTokenClaims.getEmail());
-			
-			datastoreDao.create(user);
-			return user;
-		} 
-		catch (Exception e) 
-		{
-			e.printStackTrace();
-			return null;
+			return tokenId;
 		}
+
+		public void setTokenId(String tokenId) 
+		{
+			this.tokenId = tokenId;
+		}
+
+		public User getUser() 
+		{
+			return user;
+		}
+
+		public void setUser(User user) 
+		{
+			this.user = user;
+		}
+	}
+	
+	
+	class UpdateUserOutput extends ServiceOutput
+	{
 		
 	}
 }

@@ -2,10 +2,12 @@ package com.ftonline.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 
 @Entity(name = "User")
 public class User 
 {
+	@Id
 	@Column
 	private String userId;
 	

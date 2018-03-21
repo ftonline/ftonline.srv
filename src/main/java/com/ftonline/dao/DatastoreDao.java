@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import javax.persistence.Column;
+import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public abstract class DatastoreDao
 	protected abstract List<EntityObject> getEntityObject(String entityName, Entry<String,String> ... pair);
 	
 	
-	public <T>List<T> getEntity(Class <T> entityClass, Entry<String,String> ... pair) throws Exception
+	public <T>List<T> getEntity(Class <T> entityClass, Entry<String,String> ... pair)
 	{
 		List<T> objs = new ArrayList<>();
 		try 
@@ -54,7 +55,6 @@ public abstract class DatastoreDao
 		catch (Exception e) 
 		{
 			e.printStackTrace();
-			throw e;
 		}
 		return objs;
 	}
@@ -78,7 +78,7 @@ public abstract class DatastoreDao
 	}
 	
 	
-	public void create(Object obj) throws IllegalArgumentException, IllegalAccessException
+	public void create(Object obj) throws Exception
 	{
 		List<EntityObject> entityObjects = populateFields(obj);
 		put(entityObjects);     
@@ -97,7 +97,7 @@ public abstract class DatastoreDao
 	}
 	
 	
-	private List<EntityObject> populateFields(Object obj) throws IllegalArgumentException, IllegalAccessException
+	private List<EntityObject> populateFields(Object obj) throws Exception
 	{
 		List<EntityObject> entityObjects = new ArrayList<EntityObject>();
 		
@@ -106,7 +106,6 @@ public abstract class DatastoreDao
 		EntityObject entityObject = new EntityObject();
 		entityObjects.add(entityObject);
 		entityObject.setEntityName(entityName);
-		entityObject.setId(idGenerator.getUniqueId());
 		
 		for (Field f : obj.getClass().getDeclaredFields())
 		{
@@ -131,6 +130,18 @@ public abstract class DatastoreDao
 				{
 					entityObjects.addAll(populateFields(collObj));
 				}
+			}
+			
+			Id id = f.getAnnotation(Id.class);
+			if (id != null)
+			{
+				f.setAccessible(true);
+				String value = (String) f.get(obj);
+				entityObject.setId(value);
+			}
+			if (entityObject.getId() == null)
+			{
+				throw new Exception("entityObject.getId() should not be null.");
 			}
 		}
 		

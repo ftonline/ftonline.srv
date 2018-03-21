@@ -41,7 +41,7 @@ public class DatastoreApi extends DatastoreDao
 		
 		for (EntityObject entityObject : entityObjects)
 		{
-			Entity entity = new Entity(entityObject.getEntityName());
+			Entity entity = new Entity(entityObject.getEntityName(), entityObject.getId());
 			entities.add(entity);
 			for (Entry<String, Object> entry : entityObject.getProperties().entrySet())
 			{
@@ -74,5 +74,11 @@ public class DatastoreApi extends DatastoreDao
 			entityObjects.add(entityObject);
 		}
 		return entityObjects;
+	}
+	
+	public void update(List<EntityObject> entityObjects)
+	{
+		List<Entity> posts = populateFields(entityObjects);
+		datastore.put(posts);
 	}
 }
