@@ -1,4 +1,4 @@
-package com.ftonline.service;
+package com.ftonline.service.user;
 
 
 import java.util.AbstractMap;
@@ -48,7 +48,8 @@ public class UserService
 	}
 	
 	
-	public UpdateUserOutput updateUser(UpdateUserInput updateUserInput)
+	@PostMapping(value="/user/updateUser", consumes="application/json")
+	public UpdateUserOutput updateUser(@RequestBody UpdateUserInput updateUserInput)
 	{
 		UpdateUserOutput updateUserOutput = new UpdateUserOutput();
 		try
@@ -59,6 +60,7 @@ public class UserService
 			userToUpdate.setFirstName(user.getFirstName());
 			userToUpdate.setLastName(user.getLastName());
 			userToUpdate.setPhone(user.getPhone());
+			datastoreDao.update(userToUpdate);
 		}
 		catch (Exception e) 
 		{
@@ -109,20 +111,7 @@ public class UserService
 		return user;
 	}
 	
-	class  PsotUserInput
-	{
-		private String tokenId;
-
-		public String getTokenId()
-		{
-			return tokenId;
-		}
-
-		public void setTokenId(String tokenId) 
-		{
-			this.tokenId = tokenId;
-		}
-	}
+	
 	
 	class  PsotUserOutput extends ServiceOutput
 	{
@@ -136,34 +125,6 @@ public class UserService
 		public User getUser()
 		{
 			return this.user;
-		}
-	}
-	
-	
-	class UpdateUserInput
-	{
-		private String tokenId;
-		
-		private User user;
-
-		public String getTokenId() 
-		{
-			return tokenId;
-		}
-
-		public void setTokenId(String tokenId) 
-		{
-			this.tokenId = tokenId;
-		}
-
-		public User getUser() 
-		{
-			return user;
-		}
-
-		public void setUser(User user) 
-		{
-			this.user = user;
 		}
 	}
 	

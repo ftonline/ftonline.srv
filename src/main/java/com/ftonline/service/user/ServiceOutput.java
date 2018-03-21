@@ -1,4 +1,4 @@
-package com.ftonline.service;
+package com.ftonline.service.user;
 
 import java.util.ArrayList;
 import java.util.List;

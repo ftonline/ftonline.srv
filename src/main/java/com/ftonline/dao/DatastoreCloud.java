@@ -114,6 +114,7 @@ public class DatastoreCloud extends DatastoreDao
 		return entityObjects;
 	}
 	
+	@Override
 	public void update(List<EntityObject> entityObjects)
 	{
 		List <FullEntity<?>> tasks = getTasksFromEntityObjects(entityObjects);
@@ -125,6 +126,6 @@ public class DatastoreCloud extends DatastoreDao
 			entities.add((Entity) fullEntity);
 		}
 		
-		datastore.update(entities.toArray(new Entity[entities.size()]));
+		datastore.put(tasks.toArray(new FullEntity[tasks.size()]));
 	}
 }

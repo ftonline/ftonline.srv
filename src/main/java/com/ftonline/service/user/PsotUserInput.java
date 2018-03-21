@@ -1,7 +1,9 @@
-package com.ftonline.service;
+package com.ftonline.service.user;
 
-public class UserServiceInput 
+public class  PsotUserInput
 {
+	public PsotUserInput() {}
+	
 	private String tokenId;
 
 	public String getTokenId()

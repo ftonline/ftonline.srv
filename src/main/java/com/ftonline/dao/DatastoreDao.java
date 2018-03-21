@@ -147,4 +147,13 @@ public abstract class DatastoreDao
 		
 		return entityObjects;
 	}
+	
+	
+	public void update(Object obj) throws Exception
+	{
+		List<EntityObject> entityObjects = populateFields(obj);
+		update(entityObjects);     
+	}
+	
+	abstract void update(List<EntityObject> entityObjects);
 }

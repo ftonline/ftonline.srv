@@ -1,4 +1,4 @@
-package com.ftonline.service;
+package com.ftonline.service.user;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;

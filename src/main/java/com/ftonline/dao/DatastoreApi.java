@@ -76,6 +76,7 @@ public class DatastoreApi extends DatastoreDao
 		return entityObjects;
 	}
 	
+	@Override
 	public void update(List<EntityObject> entityObjects)
 	{
 		List<Entity> posts = populateFields(entityObjects);
