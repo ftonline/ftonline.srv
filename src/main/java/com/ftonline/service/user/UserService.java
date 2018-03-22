@@ -85,7 +85,7 @@ public class UserService
 	}
 	
 	
-	private User retrieveUser(String googleTokenId) throws Exception
+	public User retrieveUser(String googleTokenId) throws Exception
 	{
 		GoogleTokenClaims googleTokenClaims = googleSignInService.retriveGoogleTokenClaims(googleTokenId);
 		if(!googleTokenClaims.getAud().equals("566387118967-mj1o2jd61ra475g3ql29qkvrv6htrh7m.apps.googleusercontent.com"))
