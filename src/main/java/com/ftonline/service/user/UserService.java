@@ -25,7 +25,6 @@ public class UserService
 	
 	
 	@Autowired
-	@Qualifier("datastoreCloud")
 	DatastoreDao datastoreDao;
 	
 	

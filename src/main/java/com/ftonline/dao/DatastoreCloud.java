@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
 import com.google.cloud.datastore.Datastore;
@@ -17,6 +18,7 @@ import com.google.cloud.datastore.Query;
 import com.google.cloud.datastore.QueryResults;
 
 @Repository
+@Profile("dev")
 public class DatastoreCloud extends DatastoreDao
 {
 	private Datastore datastore;

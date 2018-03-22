@@ -2,6 +2,7 @@ package com.ftonline.dao;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -131,21 +132,44 @@ public abstract class DatastoreDao
 					entityObjects.addAll(populateFields(collObj));
 				}
 			}
-			
+		}
+		
+		entityObject.setId(getObjectId(obj));
+		
+		if (entityObject.getId() == null)
+		{
+			throw new Exception("entityObject.getId() should not be null.");
+		}
+		
+		return entityObjects;
+	}
+	
+	
+	private String getObjectId(Object obj) throws Exception
+	{
+		for (Field f : obj.getClass().getDeclaredFields())
+		{
 			Id id = f.getAnnotation(Id.class);
 			if (id != null)
 			{
 				f.setAccessible(true);
 				String value = (String) f.get(obj);
-				entityObject.setId(value);
-			}
-			if (entityObject.getId() == null)
-			{
-				throw new Exception("entityObject.getId() should not be null.");
+				return value;
 			}
 		}
 		
-		return entityObjects;
+		for (Method method : obj.getClass().getDeclaredMethods())
+		{
+			Id id = method.getAnnotation(Id.class);
+			if (id != null)
+			{
+				method.setAccessible(true);
+				String value = (String) method.invoke(obj);
+				return value;
+			}
+		}
+		
+		return null;
 	}
 	
 	

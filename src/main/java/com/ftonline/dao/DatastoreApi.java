@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
 import com.google.appengine.api.datastore.DatastoreService;
@@ -16,6 +17,7 @@ import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
 
 @Repository
+@Profile("production")
 public class DatastoreApi extends DatastoreDao
 {
 	private DatastoreService datastore;
